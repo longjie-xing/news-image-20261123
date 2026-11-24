@@ -1,197 +1,169 @@
 #!/usr/bin/env python3
-"""Draw the 23 November 2026 news poster: 'The World in One Picture'.
+"""Draw the news-image-20261123 poster: entry.png (1024x1024), Pillow only.
 
-Version 2 (iteration after blind rounds 1-2: rank 2557/9643, judge win rate
-57.7%): re-verified every story against reporting on 23-24 November 2026.
-Fixes vs v1: Dymer toll corrected to 11 dead in Dymer / 15 across the Kyiv
-region (v1 said 9 / 12); added the Indonesia factory fire (24 killed, ~30
-missing), the day's biggest missing story; lead sharpened with the EU/UK
-rejection and the longest-COP-ever detail; dropped the unverified Vanuatu
-quake line from the footer.
-
-Everything is drawn from scratch with Pillow. No external assets.
-Output: entry.png (1024x1024) next to this script.
+No external images. All text is drawn with DejaVu fonts.
 """
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-W, H = 1024, 1024
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "entry.png")
+
+W, H = 1024, 1024
 
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
-NAVY_BOTTOM = (10, 27, 51)
-NAVY_TOP = (7, 19, 38)
-PANEL = (18, 41, 77)
+NAVY_TOP = (7, 17, 36)
+NAVY_BOTTOM = (17, 36, 68)
+PANEL = (26, 52, 88)
+FOOTER = (5, 12, 26)
+GOLD = (212, 175, 55)
+ORANGE = (255, 150, 50)
+RED = (214, 48, 48)
 WHITE = (255, 255, 255)
-BODY = (201, 214, 232)
-MUTED = (148, 165, 194)
-GOLD = (255, 184, 77)
-ORANGE = (255, 122, 61)
-RED = (255, 84, 72)
-RULE = (58, 84, 128)
-FOOTER_BG = (6, 15, 31)
-
-MARGIN = 48
+PALE = (196, 210, 228)
+DIVIDER = (70, 95, 130)
 
 
 def font(path, size):
     return ImageFont.truetype(path, size)
 
 
-def text_w(draw, s, f):
-    return draw.textlength(s, font=f)
-
-
-def wrap(draw, s, f, max_w):
-    """Greedy word wrap returning a list of lines that fit max_w."""
-    words = s.split()
-    lines, cur = [], ""
-    for word in words:
-        trial = (cur + " " + word).strip()
-        if text_w(draw, trial, f) <= max_w:
-            cur = trial
-        else:
-            if cur:
-                lines.append(cur)
-            cur = word
-    if cur:
-        lines.append(cur)
-    return lines
-
-
-def fit_font(draw, s, path, start, max_w):
-    """Largest bold size <= start whose rendered width fits max_w."""
-    size = start
-    while size > 12:
-        f = font(path, size)
-        if text_w(draw, s, f) <= max_w:
-            return f
-        size -= 2
-    return font(path, size)
-
-
-def draw_gradient(img):
+def make_gradient():
+    img = Image.new("RGB", (W, H))
     px = img.load()
     for y in range(H):
-        t = y / max(1, H - 1)
+        t = y / (H - 1)
         r = int(NAVY_TOP[0] + (NAVY_BOTTOM[0] - NAVY_TOP[0]) * t)
         g = int(NAVY_TOP[1] + (NAVY_BOTTOM[1] - NAVY_TOP[1]) * t)
         b = int(NAVY_TOP[2] + (NAVY_BOTTOM[2] - NAVY_TOP[2]) * t)
         for x in range(W):
             px[x, y] = (r, g, b)
+    return img
+
+
+def wrap(draw, text, fnt, max_width):
+    """Greedy word wrap; returns a list of lines that fit max_width."""
+    words = text.split()
+    lines, cur = [], ""
+    for w in words:
+        trial = (cur + " " + w).strip()
+        if draw.textlength(trial, font=fnt) <= max_width:
+            cur = trial
+        else:
+            if cur:
+                lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def draw_centered(draw, text, y, fnt, fill):
+    w = draw.textlength(text, font=fnt)
+    draw.text(((W - w) / 2, y), text, font=fnt, fill=fill)
 
 
 def main():
-    img = Image.new("RGB", (W, H))
-    draw_gradient(img)
+    img = make_gradient()
     d = ImageDraw.Draw(img)
 
     # ---- Masthead ----
-    y = 34
-    date_f = font(BOLD, 34)
-    date = "MONDAY, 23 NOVEMBER 2026"
-    d.text(((W - text_w(d, date, date_f)) / 2, y), date, font=date_f, fill=GOLD)
-    y += 52
-    title_f = font(BOLD, 56)
-    title = "THE WORLD IN ONE PICTURE"
-    d.text(((W - text_w(d, title, title_f)) / 2, y), title, font=title_f, fill=WHITE)
-    y += 78
-    d.line([(MARGIN, y), (W - MARGIN, y)], fill=GOLD, width=3)
-    y += 22
+    draw_centered(d, "MONDAY, 23 NOVEMBER 2026", 34, font(BOLD, 34), GOLD)
+    draw_centered(d, "THE WORLD IN ONE PICTURE", 82, font(BOLD, 56), WHITE)
+    d.line([(362, 158), (662, 158)], fill=GOLD, width=2)
 
     # ---- Lead panel ----
-    panel_x0, panel_x1 = MARGIN, W - MARGIN
-    panel_y0 = y
-    panel_h = 196
-    panel_y1 = panel_y0 + panel_h
-    d.rounded_rectangle([panel_x0, panel_y0, panel_x1, panel_y1],
-                        radius=16, fill=PANEL)
+    px0, py0, px1, py1 = 44, 184, 980, 380
+    d.rounded_rectangle([px0, py0, px1, py1], radius=16, fill=PANEL)
     # red accent bar on the left edge
-    d.rounded_rectangle([panel_x0, panel_y0, panel_x0 + 10, panel_y1],
-                        radius=5, fill=RED)
-    inner_x = panel_x0 + 30
-    inner_w = panel_x1 - inner_x - 24
-    py = panel_y0 + 18
-    label_f = font(BOLD, 20)
-    d.text((inner_x, py), "TOP STORY", font=label_f, fill=ORANGE)
-    py += 32
-    headline = "COP31 COLLAPSES"
-    head_f = fit_font(d, headline, BOLD, 64, inner_w)
-    d.text((inner_x, py), headline, font=head_f, fill=RED)
-    py += head_f.size + 14
-    body_f = font(REG, 21)
-    lead_body = ("EU and UK reject a final text with no mention of fossil "
-                 "fuels, ending the longest climate summit with no deal "
-                 "\u2014 the first breakdown since Copenhagen 2009.")
-    for line in wrap(d, lead_body, body_f, inner_w):
-        d.text((inner_x, py), line, font=body_f, fill=BODY)
-        py += 28
+    d.rounded_rectangle([px0, py0, px0 + 14, py1], radius=7, fill=RED)
+    d.rectangle([px0 + 7, py0, px0 + 14, py1], fill=RED)
+
+    tx = px0 + 32
+    d.text((tx, 200), "TOP STORY", font=font(BOLD, 18), fill=ORANGE)
+    d.text((tx, 224), "COP31 COLLAPSES", font=font(BOLD, 64), fill=RED)
+
+    lead_body = (
+        "Antalya talks collapsed as the EU and UK rejected a text with no "
+        "mention of fossil fuels \u2014 the longest summit ever, the first "
+        "breakdown since Copenhagen 2009."
+    )
+    body_font = font(REG, 21)
+    lines = wrap(d, lead_body, body_font, px1 - 24 - tx)
+    assert len(lines) <= 2, f"lead body wrapped to {len(lines)} lines: {lines}"
+    y = 302
+    for ln in lines:
+        d.text((tx, y), ln, font=body_font, fill=PALE)
+        y += 28
 
     # ---- Five numbered stories ----
     stories = [
-        ("DEMOCRATS' BIGGEST HOUSE WIN SINCE 1992",
-         "A recount confirms Chuck Hubbard's 330-vote win over Virginia Foxx "
-         "in North Carolina, giving Democrats at least 258 House seats \u2014 "
-         "the largest majority in over 30 years."),
-        ("BOY, 7, PULLED ALIVE FROM RUBBLE",
-         "Davyd survives nearly 14 hours under a collapsed block in Dymer; "
-         "11 dead there, 15 across the Kyiv region. A 79-year-old woman is "
-         "also rescued alive."),
-        ("24 KILLED IN INDONESIA FACTORY FIRE",
-         "A blaze guts a candy factory in Cikande; about 30 workers are still "
-         "missing as rescuers search the unstable wreckage. DNA tests may "
-         "take weeks."),
-        ("HOUTHIS CLAIM SAUDI REFINERY HIT",
-         "Yemen's Houthis say they hit the Rabigh oil refinery and a radar "
-         "site; Saudi Arabia does not confirm any damage."),
-        ("NATO MEETS OVER POLAND MISSILES",
-         "All three objects that fell in Poland are confirmed Russian Kh-101 "
-         "cruise missiles; NATO's council meets in Brussels."),
+        (
+            "Democrats Win Biggest House Majority Since 1992",
+            "A recount confirms Chuck Hubbard beat Virginia Foxx by 330 votes "
+            "in North Carolina's 5th district, taking Democrats to at least 258 "
+            "seats \u2014 their largest majority in over 30 years.",
+        ),
+        (
+            "Boy, 7, Pulled Alive From Rubble After 14 Hours",
+            "Davyd was rescued in Dymer, where 11 people died; 15 died across "
+            "the Kyiv region in total, and a 79-year-old woman was also pulled out alive.",
+        ),
+        (
+            "24 Killed in Indonesia Candy Factory Fire",
+            "The blaze at a factory in Cikande left about 30 workers still missing "
+            "as rescuers search unstable wreckage; DNA identification may take weeks.",
+        ),
+        (
+            "Houthis Claim Strike on Saudi Oil Refinery",
+            "The group says it hit the Rabigh refinery and a radar site, but "
+            "Saudi Arabia has not confirmed any damage.",
+        ),
+        (
+            "NATO Meets Over Missiles That Fell in Poland",
+            "All three objects that fell in Poland are confirmed as Russian Kh-101 "
+            "cruise missiles, as the NATO council meets in Brussels.",
+        ),
     ]
-    sy = panel_y1 + 20
-    head_f2 = font(BOLD, 23)
-    body_f2 = font(REG, 19)
-    badge_f = font(BOLD, 20)
-    for i, (head, body) in enumerate(stories, start=1):
-        # gold circle badge with number
-        cx, cy = MARGIN + 18, sy + 16
-        d.ellipse([cx - 18, cy - 18, cx + 18, cy + 18], fill=GOLD)
+
+    head_font = font(BOLD, 23)
+    story_font = font(REG, 19)
+    num_font = font(BOLD, 20)
+    block_y = 404
+    for i, (headline, body) in enumerate(stories, start=1):
+        # gold numbered badge
+        cx, cy, r = 68, block_y + 20, 17
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=GOLD)
         num = str(i)
-        d.text((cx - text_w(d, num, badge_f) / 2, cy - 13), num,
-               font=badge_f, fill=NAVY_TOP)
-        tx = MARGIN + 52
-        tw = W - MARGIN - tx
-        d.text((tx, sy), head, font=head_f2, fill=WHITE)
-        by = sy + 30
-        for line in wrap(d, body, body_f2, tw):
-            d.text((tx, by), line, font=body_f2, fill=BODY)
-            by += 24
-        sy = by + 6
+        nw = d.textlength(num, font=num_font)
+        nh = num_font.getbbox(num)[3]
+        d.text((cx - nw / 2, cy - nh / 2 - 2), num, font=num_font, fill=NAVY_TOP)
+
+        sx = 96
+        d.text((sx, block_y), headline, font=head_font, fill=WHITE)
+        slines = wrap(d, body, story_font, 980 - 24 - sx)
+        assert len(slines) <= 2, f"story {i} wrapped to {len(slines)} lines"
+        sy = block_y + 34
+        for ln in slines:
+            d.text((sx, sy), ln, font=story_font, fill=PALE)
+            sy += 25
         if i < len(stories):
-            d.line([(tx, sy), (W - MARGIN, sy)], fill=RULE, width=1)
-            sy += 10
+            d.line([(sx, block_y + 88), (980, block_y + 88)], fill=DIVIDER, width=1)
+        block_y += 100
 
     # ---- Footer strip ----
-    fy0 = 902
-    d.rectangle([0, fy0, W, H], fill=FOOTER_BG)
-    d.line([(0, fy0), (W, fy0)], fill=RULE, width=2)
-    fx = MARGIN
-    fy = fy0 + 16
-    foot_label_f = font(BOLD, 20)
-    d.text((fx, fy), "ALSO TODAY", font=foot_label_f, fill=GOLD)
-    fy += 32
-    foot_f = font(REG, 20)
-    d.text((fx, fy), "\u2022  BepiColombo enters orbit around Mercury after an eight-year journey",
-           font=foot_f, fill=BODY)
-    fy += 28
-    d.text((fx, fy), "\u2022  Marc M\u00e1rquez seals a record-equalling eighth MotoGP title in Portugal",
-           font=foot_f, fill=BODY)
+    d.rectangle([0, 916, W, H], fill=FOOTER)
+    d.text((48, 930), "ALSO TODAY", font=font(BOLD, 18), fill=GOLD)
+    foot_font = font(REG, 20)
+    d.text((48, 958), "\u2022  BepiColombo enters orbit around Mercury after an eight-year journey.",
+           font=foot_font, fill=PALE)
+    d.text((48, 986), "\u2022  Marc M\u00e1rquez seals a record-equalling eighth MotoGP title in Portugal.",
+           font=foot_font, fill=PALE)
 
-    img.save(OUT, "PNG")
-    print(f"Wrote {OUT} ({W}x{H})")
+    img.save(OUT)
+    print("wrote", OUT)
 
 
 if __name__ == "__main__":
