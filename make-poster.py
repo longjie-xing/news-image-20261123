@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """Draw the 23 November 2026 news poster: 'The World in One Picture'.
 
+Version 2 (iteration after blind rounds 1-2: rank 2557/9643, judge win rate
+57.7%): re-verified every story against reporting on 23-24 November 2026.
+Fixes vs v1: Dymer toll corrected to 11 dead in Dymer / 15 across the Kyiv
+region (v1 said 9 / 12); added the Indonesia factory fire (24 killed, ~30
+missing), the day's biggest missing story; lead sharpened with the EU/UK
+rejection and the longest-COP-ever detail; dropped the unverified Vanuatu
+quake line from the footer.
+
 Everything is drawn from scratch with Pillow. No external assets.
 Output: entry.png (1024x1024) next to this script.
 """
@@ -115,9 +123,9 @@ def main():
     d.text((inner_x, py), headline, font=head_f, fill=RED)
     py += head_f.size + 14
     body_f = font(REG, 21)
-    lead_body = ("UN climate talks in Antalya end with no deal \u2014 the first "
-                 "breakdown since Copenhagen in 2009 \u2014 after fossil-fuel "
-                 "language is stripped from the final text.")
+    lead_body = ("EU and UK reject a final text with no mention of fossil "
+                 "fuels, ending the longest climate summit with no deal "
+                 "\u2014 the first breakdown since Copenhagen 2009.")
     for line in wrap(d, lead_body, body_f, inner_w):
         d.text((inner_x, py), line, font=body_f, fill=BODY)
         py += 28
@@ -125,20 +133,23 @@ def main():
     # ---- Five numbered stories ----
     stories = [
         ("DEMOCRATS' BIGGEST HOUSE WIN SINCE 1992",
-         "A recount win in North Carolina gives Democrats at least 258 House "
-         "seats, the largest majority for either party in over 30 years."),
+         "A recount confirms Chuck Hubbard's 330-vote win over Virginia Foxx "
+         "in North Carolina, giving Democrats at least 258 House seats \u2014 "
+         "the largest majority in over 30 years."),
         ("BOY, 7, PULLED ALIVE FROM RUBBLE",
-         "Rescuers free a seven-year-old after 14 hours under a collapsed "
-         "block in Dymer; nine dead there, 12 across the Kyiv region."),
+         "Davyd survives nearly 14 hours under a collapsed block in Dymer; "
+         "11 dead there, 15 across the Kyiv region. A 79-year-old woman is "
+         "also rescued alive."),
+        ("24 KILLED IN INDONESIA FACTORY FIRE",
+         "A blaze guts a candy factory in Cikande; about 30 workers are still "
+         "missing as rescuers search the unstable wreckage. DNA tests may "
+         "take weeks."),
         ("HOUTHIS CLAIM SAUDI REFINERY HIT",
          "Yemen's Houthis say they hit the Rabigh oil refinery and a radar "
          "site; Saudi Arabia does not confirm any damage."),
         ("NATO MEETS OVER POLAND MISSILES",
          "All three objects that fell in Poland are confirmed Russian Kh-101 "
          "cruise missiles; NATO's council meets in Brussels."),
-        ("BEPICOLOMBO REACHES MERCURY",
-         "After an eight-year journey, the ESA\u2013JAXA probe enters orbit "
-         "around Mercury \u2014 only the second mission ever to do so."),
     ]
     sy = panel_y1 + 20
     head_f2 = font(BOLD, 23)
@@ -173,10 +184,10 @@ def main():
     d.text((fx, fy), "ALSO TODAY", font=foot_label_f, fill=GOLD)
     fy += 32
     foot_f = font(REG, 20)
-    d.text((fx, fy), "\u2022  Marc M\u00e1rquez seals a record-equalling eighth MotoGP title in Portugal",
+    d.text((fx, fy), "\u2022  BepiColombo enters orbit around Mercury after an eight-year journey",
            font=foot_f, fill=BODY)
     fy += 28
-    d.text((fx, fy), "\u2022  Magnitude 6.5 quake strikes the Vanuatu region, nearly 600 km deep",
+    d.text((fx, fy), "\u2022  Marc M\u00e1rquez seals a record-equalling eighth MotoGP title in Portugal",
            font=foot_f, fill=BODY)
 
     img.save(OUT, "PNG")

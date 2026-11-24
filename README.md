@@ -13,15 +13,15 @@ A single 1024x1024 poster summarising the day's biggest news — Monday, 23 Nove
 
 ## The stories
 
-**Top story — COP31 COLLAPSES:** UN climate talks in Antalya end with no deal — the first breakdown since Copenhagen in 2009 — after fossil-fuel language is stripped from the final text.
+**Top story — COP31 COLLAPSES:** EU and UK reject the final text — no mention of fossil fuels — as the longest climate summit in history ends with no deal, the first breakdown since Copenhagen in 2009.
 
-1. **DEMOCRATS' BIGGEST HOUSE WIN SINCE 1992** — A recount win in North Carolina gives Democrats at least 258 House seats, the largest majority for either party in over 30 years.
-2. **BOY, 7, PULLED ALIVE FROM RUBBLE** — Rescuers free a seven-year-old after 14 hours under a collapsed block in Dymer; nine dead there, 12 across the Kyiv region.
-3. **HOUTHIS CLAIM SAUDI REFINERY HIT** — Yemen's Houthis say they hit the Rabigh oil refinery and a radar site; Saudi Arabia does not confirm any damage.
-4. **NATO MEETS OVER POLAND MISSILES** — All three objects that fell in Poland are confirmed Russian Kh-101 cruise missiles; NATO's council meets in Brussels.
-5. **BEPICOLOMBO REACHES MERCURY** — After an eight-year journey, the ESA–JAXA probe enters orbit around Mercury — only the second mission ever to do so.
+1. **DEMOCRATS' BIGGEST HOUSE WIN SINCE 1992** — A recount confirms Chuck Hubbard's 330-vote win over Virginia Foxx in North Carolina, giving Democrats at least 258 House seats — the largest majority in over 30 years.
+2. **BOY, 7, PULLED ALIVE FROM RUBBLE** — Davyd survives nearly 14 hours under a collapsed block in Dymer; 11 dead there, 15 across the Kyiv region. A 79-year-old woman is also rescued alive.
+3. **24 KILLED IN INDONESIA FACTORY FIRE** — A blaze guts a candy factory in Cikande; about 30 workers are still missing as rescuers search the unstable wreckage. DNA tests may take weeks.
+4. **HOUTHIS CLAIM SAUDI REFINERY HIT** — Yemen's Houthis say they hit the Rabigh oil refinery and a radar site; Saudi Arabia does not confirm any damage.
+5. **NATO MEETS OVER POLAND MISSILES** — All three objects that fell in Poland are confirmed Russian Kh-101 cruise missiles; NATO's council meets in Brussels.
 
-**Also today:** Marc Márquez seals a record-equalling eighth MotoGP title in Portugal; magnitude 6.5 quake strikes the Vanuatu region, nearly 600 km deep.
+**Also today:** BepiColombo enters orbit around Mercury after an eight-year journey; Marc Márquez seals a record-equalling eighth MotoGP title in Portugal.
 
 ## How it works
 
